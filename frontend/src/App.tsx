@@ -20,6 +20,7 @@ export default function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoadingPhotos, setIsLoadingPhotos] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [deletingPhotoName, setDeletingPhotoName] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("");
 
   async function loadPhotos() {
@@ -97,6 +98,34 @@ export default function App() {
     }
   }
 
+  async function handleDelete(photoName: string) {
+    setDeletingPhotoName(photoName);
+    setStatus("");
+
+    try {
+      const encodedName = photoName
+        .split("/")
+        .map(encodeURIComponent)
+        .join("/");
+
+      const response = await fetch(`${API_BASE_URL}/photos/${encodedName}`, {
+        method: "DELETE"
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Delete failed: ${response.status} ${errorText}`);
+      }
+
+      setStatus(`Deleted ${photoName}`);
+      await loadPhotos();
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Delete failed");
+    } finally {
+      setDeletingPhotoName(null);
+    }
+  }
+
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif", maxWidth: 900, margin: "0 auto" }}>
       <h1>Azure Photo Sync</h1>
@@ -140,27 +169,55 @@ export default function App() {
           <p>No photos uploaded yet.</p>
         ) : (
           <ul style={{ listStyle: "none", padding: 0 }}>
-            {photos.map((photo) => (
-              <li
-                key={photo.name}
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "8px",
-                  padding: "1rem",
-                  marginBottom: "1rem"
-                }}
-              >
-                <p><strong>Name:</strong> {photo.name}</p>
-                <p><strong>Type:</strong> {photo.contentType ?? "unknown"}</p>
-                <p><strong>Size:</strong> {photo.size ?? "unknown"} bytes</p>
-                <p><strong>Last modified:</strong> {photo.lastModified ?? "unknown"}</p>
-                <p>
-                  <a href={photo.url} target="_blank" rel="noreferrer">
-                    Open blob URL
-                  </a>
-                </p>
-              </li>
-            ))}
+            {photos.map((photo) => {
+              const isImage = photo.contentType?.startsWith("image/") ?? false;
+              const isDeleting = deletingPhotoName === photo.name;
+
+              return (
+                <li
+                  key={photo.name}
+                  style={{
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    padding: "1rem",
+                    marginBottom: "1rem"
+                  }}
+                >
+                  {isImage && (
+                    <div style={{ marginBottom: "1rem" }}>
+                      <img
+                        src={photo.url}
+                        alt={photo.name}
+                        style={{
+                          maxWidth: "240px",
+                          maxHeight: "240px",
+                          display: "block",
+                          borderRadius: "6px"
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  <p><strong>Name:</strong> {photo.name}</p>
+                  <p><strong>Type:</strong> {photo.contentType ?? "unknown"}</p>
+                  <p><strong>Size:</strong> {photo.size ?? "unknown"} bytes</p>
+                  <p><strong>Last modified:</strong> {photo.lastModified ?? "unknown"}</p>
+
+                  <div style={{ display: "flex", gap: "0.75rem", marginTop: "0.75rem" }}>
+                    <a href={photo.url} target="_blank" rel="noreferrer">
+                      Open blob URL
+                    </a>
+
+                    <button
+                      onClick={() => void handleDelete(photo.name)}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? "Deleting..." : "Delete"}
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>
