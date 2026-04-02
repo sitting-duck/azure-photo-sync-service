@@ -1,3 +1,4 @@
+.env.deploy
 breadcrumbs.txt
 api/node_modules/
 api/dist/
