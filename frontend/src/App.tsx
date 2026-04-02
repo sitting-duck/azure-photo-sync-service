@@ -16,6 +16,11 @@ type UploadUrlResponse = {
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:7071/api";
 
+console.log("import.meta.env.VITE_API_BASE_URL =", import.meta.env.VITE_API_BASE_URL);
+console.log("Resolved API_BASE_URL =", API_BASE_URL);
+console.log("MODE =", import.meta.env.MODE);
+console.log("PROD =", import.meta.env.PROD);
+
 export default function App() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -130,6 +135,8 @@ export default function App() {
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif", maxWidth: 900, margin: "0 auto" }}>
       <h1>Azure Photo Sync</h1>
+      <p><strong>Debug API base URL:</strong> {API_BASE_URL}</p>
+      <p><strong>Debug mode:</strong> {String(import.meta.env.MODE)}</p>
 
       <section style={{ marginBottom: "2rem" }}>
         <input
