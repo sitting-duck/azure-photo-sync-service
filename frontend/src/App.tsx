@@ -14,7 +14,10 @@ type UploadUrlResponse = {
 };
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:7071/api";
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD
+    ? "https://ashley-photo-sync-api-on1.azurewebsites.net/api"
+    : "http://localhost:7071/api");
 
 console.log("import.meta.env.VITE_API_BASE_URL =", import.meta.env.VITE_API_BASE_URL);
 console.log("Resolved API_BASE_URL =", API_BASE_URL);
