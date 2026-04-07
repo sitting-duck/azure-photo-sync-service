@@ -9,22 +9,81 @@ frontend/dist/
 .env
 .env.*
 
-# Local Azure Functions settings
-api/local.settings.json
+# -----------------------------
+# OS / Editor junk
+# -----------------------------
+.DS_Store
+Thumbs.db
 
-# Frontend local env
-frontend/.env.local
+.vscode/
+.idea/
+*.swp
+*.swo
 
+# -----------------------------
+# Logs
+# -----------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# -----------------------------
 # Node modules
+# -----------------------------
 node_modules/
 api/node_modules/
 frontend/node_modules/
 
+# -----------------------------
 # Build output
+# -----------------------------
+dist/
+build/
 api/dist/
 frontend/dist/
 
+# -----------------------------
+# TypeScript
+# -----------------------------
+*.tsbuildinfo
+
+# -----------------------------
+# Environment / local-only config
+# -----------------------------
+.env
+.env.*
+!.env.example
+
+api/local.settings.json
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
+
+# -----------------------------
+# Azure Functions local files
+# -----------------------------
+api/.func/
+api/bin/
+api/obj/
+
+# -----------------------------
 # Azurite local emulator files
+# -----------------------------
 api/AzuriteConfig
 api/__azurite*
 api/__blobstorage__/
+api/__queuestorage__/
+api/__tablestorage__/
+
+# -----------------------------
+# Coverage / test output
+# -----------------------------
+coverage/
+.nyc_output/
+
+# -----------------------------
+# Temporary files
+# -----------------------------
+*.tmp
+*.temp
