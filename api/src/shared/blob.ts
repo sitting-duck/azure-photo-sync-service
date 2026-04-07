@@ -65,7 +65,13 @@ export async function createUploadUrl(blobName: string, contentType: string): Pr
     credential
   ).toString();
 
-  return `${blob.url}?${sas}`;
+  let baseUrl = blob.url;
+
+  if (connectionString === "UseDevelopmentStorage=true") {
+    baseUrl = `http://localhost:10000/devstoreaccount1/${containerName}/${blobName}`;
+  }
+
+  return `${baseUrl}?${sas}`;
 }
 
 export async function listPhotos(): Promise<Array<{

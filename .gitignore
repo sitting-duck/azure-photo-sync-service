@@ -9,4 +9,22 @@ frontend/dist/
 .env
 .env.*
 
+# Local Azure Functions settings
+api/local.settings.json
 
+# Frontend local env
+frontend/.env.local
+
+# Node modules
+node_modules/
+api/node_modules/
+frontend/node_modules/
+
+# Build output
+api/dist/
+frontend/dist/
+
+# Azurite local emulator files
+api/AzuriteConfig
+api/__azurite*
+api/__blobstorage__/
